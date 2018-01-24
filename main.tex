@@ -1,22 +1,11 @@
 \documentclass[aip,reprint]{revtex4-1}
 %\documentclass[aip]{revtex4-1}
 
-\setlength{\oddsidemargin}{0in}  %left margin position, reference is one inch
-\setlength{\textwidth}{6.5in}    %width of text=8.5-1in-1in for margin
-\setlength{\topmargin}{-0.5in}    %reference is at 1.5in, -.5in gives a start of about 1in from top
-\setlength{\textheight}{9in}     %length of text=11in-1in-1in (top and bot. marg.) 
-%\newenvironment{wileykeywords}{\textsf{Keywords:}\hspace{\stretch{1}}}{\hspace{\stretch{1}}\rule{1ex}{1ex}}
-
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}% Include figure files
-%\usepackage{caption}
 \usepackage{color}% Include colors for document elements
 \usepackage{dcolumn}% Align table columns on decimal point
-\usepackage{bm}% bold math
-%\usepackage[numbers,super,comma,sort&compress]{natbib}
-%\usepackage[nolists, nomarkers, figuresfirst]{endfloat}
 
-\definecolor{background-color}{gray}{0.98}
 \graphicspath{{data/}{images/}}
 
 \begin{document}
@@ -27,33 +16,7 @@
 \author{Yannick Carissan}
 \affiliation{Aix Marseille Univ, CNRS, Centrale Marseille, iSm2, Marseille, France}
 
-\begin{abstract}
-A magnificent abstract.
-\end{abstract}
-\maketitle
-
-%\begin{wileykeywords}
-%Anisotropy, Pseudo-potential, $\pi$ system, Quantum Chemistry, Spin %contamination
-%\end{wileykeywords}
-
-%*****************Graphical Table of Contents******************** THIS IS MANDATORY *******************
-
-% makes references listed with 1., 2., etc.  
-  \makeatletter
-  \renewcommand\@biblabel[1]{#1.}
-  \makeatother
-
-\bibliographystyle{apsrev}
-
-\renewcommand{\baselinestretch}{1.5}
-\normalsize
-
-
-\clearpage
-
 \section{Introduction}
-\newcounter{customItem}
-\newcommand{\showCustomItem}{\refstepcounter{customItem}\roman{customItem}}
 
 A great introduction.
 
@@ -103,9 +66,6 @@ In the supplementary materials are provided:
 % BIBLIOGRAPHY
 
 \bibliography{bibliography}   % Produces the bibliography via BibTeX.
-
-\clearpage
-\section{Supplementary materials}
 
 \end{document}
 
