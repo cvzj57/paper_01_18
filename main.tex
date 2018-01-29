@@ -6,7 +6,7 @@
 \usepackage{color}% Include colors for document elements
 \usepackage{dcolumn}% Align table columns on decimal point
 
-\graphicspath{{data/}{images/}}
+\graphicspath{{./}{data/}{images/}}
 
 \begin{document}
 
@@ -28,15 +28,16 @@ A superlative methodology.
 
 \subsection*{\sffamily \large Geometry Optimisation}
 \label{section:geometry_optimisation}		    		  
-  Using pseudo-potential calculations for geometry optimisation presents some difficulties. Designing pseudo-potentials such that the explicitly-treated parts of the molecule experience the correct attraction and repulsion at a particular geometry is one thing, designing them such that the same is true at any (reasonable) geometry is quite another. With a little knowledge of the all-electron system however, we can ensure that the pseudo-system will fall into the correct geometry.		  Using pseudo-potential calculations for geometry optimisation presents some difficulties. Designing pseudo-potentials such that the explicitly-treated parts of the molecule experience the correct attraction and repulsion at a particular geometry is one thing, designing them such that the same is true at any (reasonable) geometry is quite another. With a little knowledge of the all-electron system however, we can ensure that the pseudo-system will fall into the correct geometry.
+  Using pseudo-potential calculations for geometry optimisation presents some difficulties. Designing pseudo-potentials such that the explicitly-treated parts of the molecule experience the correct attraction and repulsion at a particular geometry is one thing, designing them such that the same is true at any (reasonable) geometry is quite another. With a little knowledge of the all-electron system however, we can ensure that the pseudo-system will fall into the correct geometry.	
  		 
- We begin by finding curves of dissociation for the explicit and pseudo-potential parts of the molecule, as well as another for the same parts of the all-electron molecule (see Fig \ref{fig:dissociation_diagram}). We then use a nonlinear least-squares Marquardt-Levenburg algorithm to fit a simple, exponentially-decreasing function to the difference between thsese two curves. We can now use this to make an energy correction to the pseudo-system. 		 
+ We begin by finding curves of dissociation for the explicit and pseudo-potential parts of the molecule, as well as another for the same parts of the all-electron molecule (see Figure \ref{figure:dissociation_diagram}). We then use a nonlinear least-squares Marquardt-Levenburg algorithm to fit a simple, exponentially-decreasing function to the difference between thsese two curves. We can now use this to make an energy correction to the pseudo-system. 		 
   		  
  We want the total energy of the system to be a minimum and the energy gradients on the explicitly-treated atoms to be zero at the true geometry (this needn't be true of the pseudo-atoms, see below). We have the correction for the total energy, and by taking the derivative of the fitted function, we have a measure of whether the explicit and pseudo-potential parts of the molecule experience an overall attraction or repulsion, as well as an estimate of its magnitude. We assume the effect of the potentials on the explicit hydrogen atoms is small, and add our gradient correction directly to the potential felt along the carbon-pseudo-carbon axis by one carbon, whilst subtracting it from the potential felt by the other. By doing this at every step of the optimisation, the carbon-pseudo-carbon distance should naturally reach the correct value.	
  		 
  Finally, the pseudo-atoms are fixed relative to each other before starting the optimisation.		
  		 
-\begin{figure}		 
+\begin{figure}
+%\includegraphics[scale=8cm]{ethene_dissociation}	
 \begin{center}		 
 \end{center}		
 \vspace{0.25in}		 
