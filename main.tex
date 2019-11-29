@@ -60,9 +60,12 @@
 
 \section{Introduction}
 
-A great introduction.
+In a previous paper~\cite{punter2019atomic}, we created a set of pseudopotentials designed to emulate an $sp^2$-hybridised carbon fragment, eliminating all but one electron and one proton from the whole fragment. This pseudopotential system was then optimised on an ethylene molecule. We then showed this system was able to reproduce many basic properties of the all-electron ethylene, including singlet-triplet gap, 1$^{st}$ ionisation and HOMO energies, as well as absorption spectra. We then showed this system could also act as a repeatable building block for much larger systems at a similar level of accuracy. 
+
+In this paper we shall describe the developments of the method since the original work. We shall begin in Section~\ref{sec:methodology} by first recalling briefly the defining features of our pseudopotential method, before setting out the new additions made since the previous work, as well as a short explanation of our computational methods. In Section~\ref{sec:simplesystems} we go on to derive and test some new pseudopotentials across a series of simple but varied molecules. In Section~\ref{sec:pseudospectra}, we derive and test a new pseudopotential with the aim of reproducing the absorption and electronic circular dichroism (ECD) spectra of $\pi$ systems. Then, in Section~\ref{sec:complexsystems}, we take the pseudopotentials created in previous sections and test them in several much larger and more complicated molecules, with a view to seeing how well the pseudopotentials are able to reproduce the subtleties of each. Some final remarks and thoughts are then presented in the conclusion.
 
 \section{Methodology}
+\label{sec:methodology}
 
 \subsection{Pseudopotential Form}
 \label{sec:pseudoform}
@@ -76,9 +79,9 @@ As in the previous work, we have decided to restrict ourselves to creating an `o
 \label{eq:turbomoleecp}
 \end{equation}
 
-where $n_k$ is an integer and where the total number of expressions $k$ can run across multiple such expressions for each angular momentum $l$. This means that any such potentials can be described in pseudopotential terms as `semi-local', meaning that they have an angular momentum component, but that they are not expanded in the atomic Gaussian basis sets. Equation~\ref{eq:turbomoleecp} means we have a choice of three variables per potential function, $A_k$, $n_k$ and $\alpha_k$. Throughout this work, the value of $n_k$ is fixed at 1. We limit ourselves to a maximum of one potential function per angular momentum $l$ for each potential centre. This is done only for the sake of simplicity and the possiblity of increasing this limit is discussed in Section~\ref{sec:further_development}. There is however a precedent of the main group elements being sufficiently well-described by a single potential function per angular momentum~\cite{igelmann_1988}.
+where $n_k$ is an integer and where the total number of expressions $k$ can run across multiple such expressions for each angular momentum $l$. This means that any such potentials can be described in pseudopotential terms as `semi-local', meaning that they have an angular momentum component, but that they are not expanded in the atomic Gaussian basis sets. Equation~\ref{eq:turbomoleecp} means we have a choice of three variables per potential function, $A_k$, $n_k$ and $\alpha_k$. Throughout this work, the value of $n_k$ is fixed at 1. We limit ourselves to a maximum of one potential function per angular momentum $l$ for each potential centre. This is done only for the sake of simplicity and the possiblity of increasing this limit is discussed in Section~\ref{sec:conc}. There is however a precedent of the main group elements being sufficiently well-described by a single potential function per angular momentum~\cite{igelmann_1988}.
 
-The next departure from most pseudopotential methods is that we remove whole atoms from the molecular fragments for which we create potentials, as well as some further protons (see REF). We instead use non-atom-centered potentials. In full then, the multi-centered pseudopotential operator can be written as
+The next departure from most pseudopotential methods is that we remove whole atoms from the molecular fragments for which we create potentials, as well as some further protons (see~\cite{punter2019atomic}). We instead use non-atom-centered potentials. In full then, the multi-centered pseudopotential operator can be written as
 
 \begin{multline}
 \label{eq:ourPP}
@@ -99,7 +102,7 @@ where $K$ is the number of pseudofragments.
 
 \subsection{Pseuodpotential Setups}
 
-In keeping with our philosophy described in Section~\ref{sec:pseudoform} of retaining only the chemically-relevant parts of the system, we designed three four potential set-ups that kept only the bonding atoms. These consisted of two for $sp^2$ carbon atoms, and two for $sp^3$ carbon atoms. These we termed $\alpha$, $\beta$, $\gamma$ and $\delta$ potentials respectively. All four set-ups are summarised in Table~\ref{tab:pseudodiags}.
+In the previous work, we designed a set of pseudopotentials for an $sp2$-hybridised carbon atom  containing only one proton and one electron, to which we shall now refer as the $\alpha$ potential set-up, with the original potential parameters of the previous work referred to as the $set4$ potentials. In keeping with our philosophy described in Section~\ref{sec:pseudoform} of retaining only the chemically-relevant parts of the system, we designed three four potential set-ups that kept only the bonding atoms. These consisted of a futher $sp^2$ carbon fragment, and two $sp^3$ carbon fragments. These we termed $\beta$, $\gamma$ and $\delta$ potentials respectively. All four set-ups are summarised in Table~\ref{tab:pseudodiags}.
 
 \begin{table}[h]
 \begin{center}
@@ -124,9 +127,18 @@ In keeping with our philosophy described in Section~\ref{sec:pseudoform} of reta
 \end{center}
 \end{table}
 
+In the $\gamma$ and $\delta$ set-ups, th distance from central pseudocrabon to non-atom-centered potentials is denoted by $c$. In the $\alpha$ and $\beta$ set-ups, the planar distance to each potential set is denoted by $c$, and the distance above and below the $xy$ plane by $d$. Figure~ref{fig:cddef} illustrates this.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=5cm]{tm_sp2_potentials}
+\caption{Definition of distances $c$ and $d$ for $\alpha$ and $]beta$ pseuodpotential set-ups}\label{fig:cddef}
+\end{center}
+\end{figure}
+
 \subsection{The MOO program}
 
-We wished to generalise the method developed in REF, so that it might be used for creating other pseudosystems. Building on the scripts we had developed above we created a general minimisation program, the Multiple Orbital Optimiser (MOO), which could minimise the error between all-electron and pseudosystems. This program is written in Python~\cite{python}, and works on the following procedure:
+We wished to generalise the method developed in the previous work, so that it might be used for creating other pseudosystems. We created a general minimisation program, the Multiple Orbital Optimiser (MOO), which could minimise the error between all-electron and pseudosystems. This program is written in Python~\cite{python}, and works on the following procedure:
 
 \begin{enumerate}
 \item Accept a series of pseudosystem calculations as an input. 
@@ -150,10 +162,10 @@ A number of optimisation criteria were proposed and used in extracting potential
 \item Molecular orbital energies
 \item TDDFT excitation energies
 \item UV spectra fitting
-\item Total energy differences - Being able to fit potentials to energy differences between individual calculations means being able to fit to such properties as ionisation energies, singlet-triplet potential energy surface gaps, or even alternate geometries.
+\item Total energy differences: Being able to fit potentials to energy differences between individual calculations means being able to fit to such properties as ionisation energies, singlet-triplet potential energy surface gaps, or even alternate geometries.
 \end{enumerate}
 
-Next the choice must be made as to which properties of the pseudosystem may be altered in the minimisation. As seen in Section~\ref{sec:pseudoform}, the pseudopotential functions have both coefficients and exponents that can be modified. There is also the spatial arrangement of the pseudopotentials themselves. For the $\alpha$ and $\beta$ potentials described in Table~\ref{tab:pseudodiags}, there are the distances $d$ and $c$, which can be altered by the MOO program in the course of the minimisation. The other potential setups in the following sections have their own geometric properties which may be altered.
+Next the choice must be made as to which properties of the pseudosystem may be altered in the minimisation. As seen in Section~\ref{sec:pseudoform}, the pseudopotential functions have both coefficients and exponents that can be modified. There is also the spatial arrangement of the pseudopotentials themselves. For the $\alpha$ and $\beta$ potentials described in Table~\ref{tab:pseudodiags}, there are the distances $d$ and $c$ (see Figure~\ref{fig:cddef}), which can be altered by the MOO program in the course of the minimisation. The other potential setups have their own geometric properties which may be altered.
 
 \begin{table}
 \begin{center}
@@ -174,7 +186,7 @@ exponents & 0.001 & 50.0 \\
 \end{center}
 \end{table}
 
-The boundary conditions used for the selection of pseudopotential parameters are listed in Table~\ref{tab:optboundaries}. It was observed in optimisations that weaker and more diffuse potentials that gave the correct results for the chosen optimisation system always transferred better to other systems than stronger and more concentrated potentials. This led to the decision that, rather than taking guesses entirely at random for the values of the gaussian coefficients and exponents, the values should be chosen from a normal distribution with a mean of $\mu$=0 and with a standard deviation half of that of the upper bound (\emph{i.e.} a standard deviation of $\sigma$=25.0).
+The program can carry out optimisations in two ways. It can either accept a set of starting `guess' paramters supplied by the user, or can attempt to solve the problem by brute force by making semi-random guesses and reporting the best result. The boundary conditions used for the semi-random guessing of pseudopotential parameters are listed in Table~\ref{tab:optboundaries}. It was observed in optimisations that weaker and more diffuse potentials that gave the correct results for the chosen optimisation system always transferred better to other systems than stronger and more concentrated potentials. This led to the decision that, rather than taking guesses entirely at random for the values of the coefficients and exponents, the values should be chosen from a normal distribution with a mean of $\mu$=0 and with a standard deviation half of that of the upper bound (\emph{i.e.} a standard deviation of $\sigma$=25.0).
 
 \subsection{Interpreting the Results}
 
@@ -188,7 +200,7 @@ The boundary conditions used for the selection of pseudopotential parameters are
 \textbf{Criteria} & 
 \textbf{Best $H_{total}/N$}\\
 \hline
-$s,p$ & def-SV(P) & \multicolumn{1}{m{3cm}}{\centering HOMO; HOMO-1($\times$2); IE} & 0.001 \\
+$s,p$ & def-SV(P) & \makecell{HOMO;\\ HOMO-1($\times$2);\\ IE} & 0.001 \\
 \hline
 \end{tabular}
 \end{center}
@@ -199,8 +211,6 @@ With the range of criteria and parameters possible for optimising pseudopotentia
 Table~\ref{tab:exampleopt} displays the results of an example optimisation in a format designed to be as readable as possible. `Pseudocarbon $l$' is the list of all the angular momenta for which potential functions are applied to the central pseudocarbon atom. In this example, there is an $s$ and a $p$ potential, each with its corresponding coefficient and exponent. Under the `Criteria' heading, we see the reference criteria against which the minimiser works. In this example, our criteria are `HOMO' (the HOMO orbital energy), `HOMO-1' (the energy of the orbital \textit{below} the HOMO, the `HOMO-1th' orbital) and `IE', the ionisation energy. We also see that the `HOMO-1' criteria has a $\times2$ weighting. Most of the various criteria on which the potentials are optimised can be written in terms of energy, which allows us to normalise the final error $H_{total}$ by dividing it by the number of criteria (multiplied by any individual weighting applied to them).
 
 In the sections that follow, results generated using optimised pseudopotentials will be presented first. They will then be followed by the details of the optimisation.
-
-- Spectral optimisation?
 
 %\subsection*{\sffamily \large Geometry Optimisation}
 %\label{section:geometry_optimisation}		    		  
@@ -223,7 +233,8 @@ In the sections that follow, results generated using optimised pseudopotentials 
 %\label{figure:dissociation_diagram}
 %\end{figure}		
 
-\section{Results and discussion} 
+\section{Results: Simple systems} 
+\label{sec:simplesystems}
 
 \subsection{$\beta$ potentials: $sp^{2}$ two-electron pseudofragment}
 
@@ -271,7 +282,7 @@ Once optimised, these pseudopotentials were then transferred to a range of diffe
 \end{center}
 \end{table}
 
-Figure~\ref{fig:beta_graphs} displays results for the HOMO energy, first ionisation energy, singlet-triplet gap energy and first excitation energy across the range of different test molecules using $\beta$ potentials. The majority of the results can be seen immediately to be of a similar quality to the first pseudopotentials of Sections~\ref{sec:prototype_work} and \ref{sec:alpha_results}, and well within half an electron-volt of the all-electron values. The pattern which emerges is that for systems where the potentials are bonded to carbon, the error is relativity small, but where the pseudocarbon bond is to another element such as oxygen (CH$_2$O), or nitrogen (CH$_2$NH), then the errors are larger, up to around 30\%. Given the potentials are optimised on a potential system bonded to a real carbon, this is probably to be expected. Bonds between carbon atoms have a very different character to bonds between carbon and oxygen or nitrogen atoms.
+Figure~\ref{fig:beta_graphs} displays results for the HOMO energy, first ionisation energy, singlet-triplet gap energy and first excitation energy across the range of different test molecules using $\beta$ potentials. The majority of the results can be seen immediately to be well within half an electron-volt of the all-electron values. The pattern which emerges is that for systems where the potentials are bonded to carbon, the error is relativity small, but where the pseudocarbon bond is to another element such as oxygen (CH$_2$O), or nitrogen (CH$_2$NH), then the errors are larger, up to around 30\%. Given the potentials are optimised on a potential system bonded to a real carbon, this is probably to be expected. Bonds between carbon atoms have a very different character to bonds between carbon and oxygen or nitrogen atoms.
 
 \begin{figure}
 \caption[Energy level results for $\beta$ pseudopotentials.]{DFT and TDDFT-PBE0 comparison of all-electron and pseudosystem energies across a range of $\beta$ potential systems.}
@@ -339,7 +350,7 @@ C$^\ast$-N & 14.7
 \multicolumn{1}{|c|}{\textbf{Basis}} & 
 \multicolumn{2}{|c|}{\textbf{Criteria}} & \textbf{$H_{total}/N$ ($eV$)} \\
 \hline
-$p$ & \multicolumn{1}{|c|}{def-SV(P)} & \multicolumn{2}{|m{2cm}|}{\centering HOMO(*3); HOMO-1; HOMO-2} & 0.90670 \\
+$p$ & \multicolumn{1}{c|}{def-SV(P)} & \multicolumn{2}{c|}{\makecell{ HOMO(*3);\\ HOMO-1;\\ HOMO-2\\}} & 0.90670 \\
 \hline
 \textbf{potential} & 
 \multicolumn{1}{|c|}{\textbf{Coefficient}} 
@@ -356,7 +367,7 @@ Contained in Table~\ref{tab:beta_opt_results} are the details of the $\beta$ opt
 
 \subsection{$\gamma$ potentials: $sp^{3}$ one-electron pseudofragment}
 
-It was decided to create a one-electron pseudopotential for an $sp^3$ pseudocarbon, and to  optimise it to mimic a methyl group bonded to a carbon atom. This setup has a $p$-shaped potential on the central carbon, along with three $s$-shaped potentials replacing the hydrogen atoms at a distance from the central carbon of 0.5~$a.u.$. The setup is shown in Table~\ref{tab:potential_definitions}.
+It was decided to create a one-electron pseudopotential for an $sp^3$ pseudocarbon, and to  optimise it to mimic a methyl group bonded to a carbon atom. This setup has a $p$-shaped potential on the central carbon, along with three $s$-shaped potentials replacing the hydrogen atoms at a distance from the central carbon of 0.5~$a.u.$. The setup is shown in Table~\ref{tab:pseudodiags}.
 
 Once optimised, the pseudopotentials were again transferred to a set of test molecules, shown in Table~\ref{tab:gamma_geoms} along with the sites of the pseudopotentials.
 
@@ -555,9 +566,9 @@ C$^\ast$-P
 \begin{tabular}{|c|.|.|c|c|}
 \hline
 \textbf{Carbon $l$} & 
-\multicolumn{1}{|c|}{\textbf{Basis}} & \multicolumn{2}{|c|}{\textbf{Criteria}} & \textbf{$H_{total}/N$ ($eV$)} \\
+\multicolumn{1}{c|}{\textbf{Basis}} & \multicolumn{2}{c|}{\textbf{Criteria}} & \textbf{$H_{total}/N$ ($eV$)} \\
 \hline
-$s,p$ & \multicolumn{1}{c}{def-SV(P)} & \multicolumn{2}{|m{2.5cm}|}{HOMO($\times$2); HOMO-1} & 0.4179 \\
+$s,p$ & \multicolumn{1}{c}{def-SV(P)} & \multicolumn{2}{|c|}{\makecell{HOMO($\times$2);\\ HOMO-1}} & 0.4179 \\
 \hline
 \textbf{Potential} & 
 \multicolumn{1}{|c|}{\textbf{Coefficient}} & 
@@ -574,7 +585,7 @@ Contained in Table~\ref{tab:gamma_opt_results} are the details of the $\gamma$ o
 
 \subsection{$\delta$ potentials: $sp^{3}$ two-electron pseudofragment}
 
-The final pseudopotentials designed were another $sp^3$ pseudocarbon configuration. In this pseudopotential setup, there are two electrons, so it is able to act as a bridge between two other all-electron, bonding atoms. This time the central carbon has not only a $p$-shaped potential, but also its own $s$-shaped potential, and we have $s$ potentials replacing two of the all-electron bonds at a distance from the pseudocarbon of $d$=0.5~$a.u.$. The setup is shown in Table~\ref{tab:potential_definitions} as part of a propane molecule, on which it is optimised.
+The final pseudopotentials designed were another $sp^3$ pseudocarbon configuration. In this pseudopotential setup, there are two electrons, so it is able to act as a bridge between two other all-electron, bonding atoms. This time the central carbon has not only a $p$-shaped potential, but also its own $s$-shaped potential, and we have $s$ potentials replacing two of the all-electron bonds at a distance from the pseudocarbon of $d$=0.5~$a.u.$. The setup is shown in Table~\ref{tab:pseudodiags} as part of a propane molecule, on which it is optimised.
 
 \begin{table}
 \begin{center}
@@ -775,7 +786,7 @@ C-C$^\ast$-F
 \multicolumn{2}{|c|}{\textbf{Criteria}} & \multicolumn{1}{|c|}{\textbf{$H_{total}/N$ ($eV$)}} \\
 \hline
 \multicolumn{1}{|c|}{$s, p$} &
-\multicolumn{1}{|c|}{def-SV(P)} & \multicolumn{2}{|m{2cm}|}{\centering \makecell{HOMO;\\ HOMO-1;\\ HOMO-2;\\ HOMO-3;\\ HOMO-4;\\ HOMO-5}} & 0.40067 \\
+\multicolumn{1}{|c|}{def-SV(P)} & \multicolumn{2}{c|}{\makecell{HOMO;\\ HOMO-1;\\ HOMO-2;\\ HOMO-3;\\ HOMO-4;\\ HOMO-5}} & 0.40067 \\
 \hline
 \multicolumn{1}{|c|}{\textbf{Potential}} & 
 \multicolumn{1}{|c|}{\textbf{Coefficient}} & 
@@ -798,10 +809,10 @@ Table~\ref{tab:delta_opt_results} details the optimisation criteria and paramete
 
 Optimisation on this molecule is complicated by the fact that the highest occupied molecular orbtials are all within around 1~$eV$ of one another, making it very easy for the orbitals to end up in the wrong order if care is not taken. This is the reason for the significant change in accuracy between the propane singlet-triplet gap under HF and under DFT-PBE0 in Table~\ref{tab:delta_errors}. 
 
-\section{Absorption spectra of Pseudomolecules}
-\label{sec:spectraloptimisation}
+\section{Results: Absorption Spectra}
+\label{sec:pseudospectra}
 
-It was shown in REF that $\alpha$ pseudopotentials could accurately reproduce absorption spectra for the excitations of the remaining electrons in the systems (obviously as the pseudopotential calculations contain only $\pi$ orbitals, excitations to or from $\sigma$ orbitals cannot be reproduced). It was shown that all the peaks of the reference spectra were clearly identifiable in the pseudosystem spectra, and these peaks in the pseudosystem spectra have very similar intensities and relative frequencies to their all-electron counterparts. We did however see that the pseudosystem spectra were consistently shifted by a 30-40~$nm$ as compared to the all-electron spectra.
+It was shown in the previous work that $\alpha$ pseudopotentials could accurately reproduce absorption spectra for the excitations of the remaining electrons in the systems (obviously as the pseudopotential calculations contain only $\pi$ orbitals, excitations to or from $\sigma$ orbitals cannot be reproduced). It was shown that all the peaks of the reference spectra were clearly identifiable in the pseudosystem spectra, and these peaks in the pseudosystem spectra have very similar intensities and relative frequencies to their all-electron counterparts. We did however see that the pseudosystem spectra were consistently shifted by a 30-40~$nm$ as compared to the all-electron spectra.
 
 \begin{figure}
 \begin{center}
@@ -812,20 +823,18 @@ $geom_1$ pseudopotentials (ps) and all-electron (ref) calculations (def2-SV(P)(s
 framework.}\label{fig:rings_geom1_rpas}
 \end{figure}
 
-Figure~\ref{fig:rings_geom1_rpas} displays the same excitations for the same series of ring systems as Figure~\ref{fig:rings_set4_rpa}, however this time the pseudopotentials are a new set, $geom_1$. This set of pseudopotentials is optimised specifically with the reproduction of UV spectra in mind, and the details of this optimisation are described below in Section~\ref{sec:spectralopt}.
+Figure~\ref{fig:rings_geom1_rpas} displays a series of singlet excitations for a range of polycyclic aromatic hydrocarbon (PAH) systems using a new set of $\alpha$ potentials, which we call $geom_1$. This set of pseudopotentials is optimised specifically with the reproduction of UV spectra in mind, and the details of this optimisation are described below in Section~\ref{sec:spectralopt}.
 
-The improvement we desired for these spectra was to shift them closer to the all-electron spectra, and from Figure~\ref{fig:rings_geom1_rpas} we can see this has been achieved. Most of the peaks of the pseudosystem spectra overlap exactly with their all-electron counterparts, though it does seem there has been a very slight visible decrease in the overall intensity of the pseudosystem spectra, for example in the highest-energy peak in the pyrene spectrum.
+The improvement we desired for these spectra was to shift them closer to the all-electron spectra than the $set$ potentials, which had a consistent shift of around 30-40~$nm$, and from Figure~\ref{fig:rings_geom1_rpas} we can see this has been achieved. Most of the peaks of the pseudosystem spectra overlap exactly with their all-electron counterparts, though it does seem there has been a very slight visible decrease in the overall intensity of the pseudosystem spectra, for example in the highest-energy peak in the pyrene spectrum. As the pseudomolecules contain only $\pi$ electrons, excitations to or from $\sigma$ orbitals are not possible. We see two such peaks in the all-electron spectrum for benzene. A consequence of this is that, since we ask for the same number of excitations for both all-electron and pseudomolecule, we also see two additional excitations in the pseudomolecular spectrum at around 50~$nm$, which are not unphysical.
 
 Unfortunately, the $geom_1$ pseudopotentials were unable to produce spectra for triplet excitations in the manner of the $set4$ potentials, as the $\pi^{*}$ triplet state was lower in energy than the singlet state. This is discussed further below.
 
 Overall this is a very pleasing result, given not only the degree of overall simplification of the pseudosystems compared to the all-electron systems, but also given the fact that the only `training set' used to optimise these potentials was a lone ethylene molecule treated only at the Hartree-Fock level. This pseudopotential method can be said to accurately reproduce UV absorption spectra.
 
-\paragraph{Intruder Orbitals:} In Section~\ref{sec:mcpmethod} it was noted that the MCP method had the problem of the so-called `intruder orbitals'. These are the dormant orbitals which have been projected into the virtual space by the potentials. In Section~\ref{sec:alpha_results} only the first exitation was calculated, and the intruder orbitals were not to be seen. At higher-energy excitations however, there is a risk that the pseudosystems will produce extra peaks not present in the all-electron system. Ultimately we did not see any such peaks for the PAHs. Nevertheless, this is discussed as a possible area for improvement of the method in Section~\ref{sec:further_development}.
-
 \subsection{Optimisation for Spectra}
 \label{sec:spectralopt}
 
-The measure of success for potentials so far, both in this work and the previous work REF, has been their ability to reproduce the HOMO, 1$^{st}$ ionisation and 1$^{st}$ excitation energies of the all-electron systems they replace. Following the success of the previous work in reproducing the spectra of PAHs, an effort was made to optimise pseudopotentials specifically for the reproduction of UV spectra. It was decided that three approaches should be tested for the creation of such potentials:
+The measure of success for potentials so far, both in this work and the previous work, has been their ability to reproduce the HOMO, 1$^{st}$ ionisation and 1$^{st}$ excitation energies of the all-electron systems they replace. Following the success of the previous work in reproducing the spectra of PAHs, an effort was made to optimise pseudopotentials specifically for the reproduction of UV spectra. It was decided that three approaches should be tested for the creation of such potentials:
 
 \begin{enumerate}
 \item Using the virtual orbitals as reference criteria
@@ -833,9 +842,7 @@ The measure of success for potentials so far, both in this work and the previous
 \item Fitting the spectra directly via a least-squares method
 \end{enumerate}
 
-Using these criteria we generated a great many potentials, most of which were poor fits, either to the reference system on which they were optimised or when transferred to other systems. Various problems were encountered with the use of TDDFT energies and with direct spectra fitting.
-
-Ultimately, using the virtual orbitals as reference criteria was found to be the most successful of the techniques tested. Table~\ref{tab:geom1opt_results} summarises the optimisation of the $geom_1$ potential seen in the UV spectra comparison above. One notes looking at the results that the pseudopotential parameters found by the optimiser are not dissimilar to those of the original $set4$ potentials. The coefficients and exponents are all within 0.5 of those of $set4$, and incorporating the distances $d$ and $c$ (see Section~\ref{sec:prototype_work}) into the optimisation procedure has resulted in the non-atom-centered $s$ potentials being moved by less than 0.1~$a.u.$ in both directions.
+Using these criteria we generated a great many potentials, most of which were poor fits, either to the reference system on which they were optimised or when transferred to other systems. Various problems were encountered with the use of TDDFT energies and with direct spectra fitting. Ultimately, using the virtual orbitals as reference criteria was found to be the most successful of the techniques tested. Table~\ref{tab:geom1opt_results} summarises the optimisation of the $geom_1$ potential seen in the UV spectra comparison above. One notes looking at the results that the pseudopotential parameters found by the optimiser are not dissimilar to those of the original $set4$ potentials. The coefficients and exponents are all within 0.5 of those of $set4$, and incorporating the distances $d$ and $c$ (see Figure~\ref{fig:cddef}) into the optimisation procedure has resulted in the non-atom-centered $s$ potentials being moved by less than 0.1~$a.u.$ in both directions.
 
 \begin{table}[h]
 \begin{center}
@@ -847,8 +854,8 @@ Ultimately, using the virtual orbitals as reference criteria was found to be the
 \multicolumn{2}{|c|}{\textbf{Criteria}} & \textbf{$H_{total}/N$ ($eV$)} \\
 \hline
 $p$ & 
-\multicolumn{1}{|c|}{def-SV(P)} & 
-\multicolumn{2}{|m{2cm}|}{\makecell{HOMO;\\ HOMO+1;\\ HOMO+2}} & 0.04037 \\
+\multicolumn{1}{c|}{def-SV(P)} & 
+\multicolumn{2}{c|}{\makecell{HOMO;\\ HOMO+1;\\ HOMO+2}} & 0.04037 \\
 \hline
 \textbf{Potential} & 
 \multicolumn{1}{|c|}{\textbf{Coefficient}} & 
@@ -862,26 +869,58 @@ $s$ & 1.2266 & 0.5448 & 0.5821 & 0.2689 \\
 \end{center}
 \end{table}
 
-The significant difference between the potentials of the previous work and the $geom_1$ potentials of Table~\ref{tab:geom1opt_results} is in the optimisation criteria chosen. Rather than the HOMO, 1$^{st}$ ionisation and singlet-triplet gap energies chosen for $set_4$, the $geom_1$ potentials are optimised on the HOMO energy, as well as the first two virtual orbitals. This includes the $\pi^*$ orbital. The success of this potential as shown above means that ensuring these virtual orbitals are correct is crucial for the accurate reproduction of the spectrum, as one would expect. 
+The significant difference between the potentials of the previous work and the $geom_1$ potentials of Table~\ref{tab:geom1opt_results} is in the optimisation criteria chosen. Rather than the HOMO, 1$^{st}$ ionisation and singlet-triplet gap energies chosen for the original potentials, the $geom_1$ potentials are optimised on the HOMO energy, as well as the first two virtual orbitals. This includes the $\pi^*$ orbital. The success of this potential as shown above means that ensuring these virtual orbitals are correct is crucial for the accurate reproduction of the spectrum, as one would expect. 
 
-All all-trans-polyene and PAH molecules shown in Section~\ref{sec:alpha_results} were then retested using the $geom_1$ pseudopotentials. As noted above in Section~\ref{sec:spectraloptimisation}, the $geom_1$ pseudopotentials were not able to reproduce triplet excitations, and so the results were obtained only for the 1$^{st}$ ionisation energy and the HOMO energy of each molecule. The average percentage difference between all-electron and pseudosystems for the 1$^{st}$ ionisation and HOMO energies respectively were 0.8\% and 15.2\%. It is apparent from these results that while the use of virtual orbitals improved the ability of the $geom_1$ potentials to reproduce the spectra of the PAH molecules, their ability to reproduce the HOMO energy for the same test molecules was decreased, with errors significantly larger compared to the $set4$ percentage errors of Section~\ref{sec:alpha_results}. This will be a consequence of changing the reference criteria. The 1$^{st}$ ionisation energy of ethylene used in the $set4$ optimisation will still depend heavily on the $\pi$ orbital of ethylene even if it is only half-occupied. The same is true of the singlet-triplet gap energy. This may not be so true of the excitation energies. The fact that the $geom_1$ potentials do not use any part of the ethylene triplet energy surface in their optimisation criteria, unlike the $set4$ potentials, also seems a likely explanation for the fact that the $geom_1$ potentials are unable to reproduce the triplet excitation spectra above.
+\begin{figure}
+\begin{center}
+\begin{tabular}{c}
+\vspace{1cm}
+
+\newcommand\setpolymerdelim[2]{\def\delimleft{#1}\def\delimright{#2}}
+\def\makebraces[#1,#2]#3#4#5{%
+\edef\delimhalfdim{\the\dimexpr(#1+#2)/2}%
+\edef\delimvshift{\the\dimexpr(#1-#2)/2}%
+\chemmove{%
+\node[at=(#4),yshift=(\delimvshift)]
+{$\left\delimleft\vrule height\delimhalfdim depth\delimhalfdim
+width0pt\right.$};%
+\node[at=(#5),yshift=(\delimvshift)]
+{$\left.\vrule height\delimhalfdim depth\delimhalfdim
+width0pt\right\delimright_{\rlap{$\scriptstyle#3$}}$};}}
+\setpolymerdelim()
+
+\makecell{
+\chemfig{[:40]-[@{left,.7}]C^\ast% 2
+    =[:320]C^\ast% 3
+     -[@{right,0.3}:40]
+}
+\makebraces[25pt,25pt]{\!\!\!n}{left}{right}} \\
+all-trans-polyene \\
+\includegraphics[width=6cm]{PAHs}\\
+PAH \\
+\end{tabular}
+\end{center}
+\caption{Above: Diagram of pseudo-all-trans-polyene unit C$_n$H$_{n+2}$, with C$^\ast$ representing a pseudocarbon. Below: Polycyclic Aromatic Hydrocarbons (PAH) - [1] Benzene, [2] Naphthalene, [3] Anthracene, [4] Pyrene, [5] Coronene, [6] $C_{54}H_{18}$.}
+\label{fig:alpha_testmols}
+\end{figure}
+
+The $geom_1$ pseudopotentials were then tested for the same all-trans-polyenes and PAH molecules as in the previous work (see Figure~\ref{fig:alpha_testmols}). As noted above in Section~\ref{sec:spectraloptimisation}, the $geom_1$ pseudopotentials were not able to reproduce triplet excitations, and so the results were obtained only for the 1$^{st}$ ionisation energy and the HOMO energy of each molecule. The average percentage difference between all-electron and pseudosystems for the 1$^{st}$ ionisation and HOMO energies respectively were 0.8\% and 15.2\%. It is apparent from these results that while the use of virtual orbitals improved the ability of the $geom_1$ potentials to reproduce the spectra of the PAH molecules, their ability to reproduce the HOMO energy for the same test molecules was decreased, with errors significantly larger compared to the  original potentials' percentage errors. This will be a consequence of changing the reference criteria. The 1$^{st}$ ionisation energy of ethylene used in the  original potentials optimisation will still depend heavily on the $\pi$ orbital of ethylene even if it is only half-occupied. The same is true of the singlet-triplet gap energy. This may not be so true of the excitation energies. The fact that the $geom_1$ potentials do not use any part of the ethylene triplet energy surface in their optimisation criteria, unlike the original potentials, also seems a likely explanation for the fact that the $geom_1$ potentials are unable to reproduce the triplet excitation spectra above.
 
 Overall then, it can be said that the use of virtual orbitals as reference criteria for optimisation improves the UV spectra produced. Simultaneously however, losing the singlet-triplet gap and 1$^{st}$ ionisation energies as reference criteria has an adverse effect on the ability of pseudopotential systems to reproduce these characteristics. 
 
-The above suggests that tuning pseudopotentials to reproduce certain physical characteristics of molecules is possible, but that it is easy to bias potentials with the choice of reference criteria. Finding all-electron reference criteria that will allow the optimisation of general, `all-purpose' pseudopotentials is therefore difficult. 
-
-In the rest of this work we are primarily interested in molecular spectra and so use the $geom_1$ pseudopotentials as a preference, though we also use and make comparisons with the original $set4$ potentials.
+The above suggests that tuning pseudopotentials to reproduce certain physical characteristics of molecules is possible, but that it is easy to bias potentials with the choice of reference criteria. Finding all-electron reference criteria that will allow the optimisation of general, `all-purpose' pseudopotentials is therefore difficult.
 
 \paragraph{Removal of basis functions:} We found that it was possible to remove the $s$ basis functions of the def-SV(P) $geom_1$ pseudocarbon without altering any of the $geom_1$ results. This is promising, as fewer basis functions means a greater gain in computational efficiency. Henceforth in this work, the $geom_1$ potentials are used without $s$ functions.
 
-\section{Pseudopotential Studies of Complex Systems}
+\section{Results: Complex Systems}
+\label{sec:complexsystems}
 
-Thus far, all potentials have been tested on systems related closely to those for which they have been optimised. In this section, the various potentials are tested in a series of more complex systems involving heavy atoms, distorted $\pi$ systems, and neighbouring $\pi$ rings. These systems were selected from recent literature with the aim of testing the limits of the potential methods thus-far described with their complex molecular and electronic structures. They are focused most heavily on the $\alpha$-type potentials. All four pseudosystems detailed in Section~\ref{sec:simple_systems} make an appearance, however.
+Thus far, all potentials have been tested on systems related closely to those for which they have been optimised. In this section, the various potentials are tested in a series of more complex systems involving heavy atoms, distorted $\pi$ systems, and neighbouring $\pi$ rings. These systems were selected from recent literature with the aim of testing the limits of the potential methods thus-far described with their complex molecular and electronic structures. They are focused most heavily on the $\alpha$-type potentials. All four pseudosystems detailed in Table~\ref{tab:pseudodiags} make an appearance, however.
 
-\subsection{Complex Spectra: Helicene}
+\subsection{Helicene}
 \label{sec:helicene}
 
-In the previous work REF we studied the absorption and ECD spectra of helicene. We now repeat the same calculations on a series of [n]helicene molcules (of length $n$=6-9 rings) using the $geom_1$ potentials.
+In the previous work we studied the absorption and ECD spectra of helicene. We now repeat the same calculations on a series of [n]helicene molcules (of length $n$=6-9 rings) using the $geom_1$ potentials.
 
 \begin{figure}
 \begin{center}
@@ -917,7 +956,7 @@ Figure~\ref{fig:helipeaks} displays transition densities for the four most disti
 \caption[$geom_1$ pseudo{[10]}helicene transition densities.]{Transition densities for pseudo[10]helicene using $geom_1$ pseudopotentials. Excitations from left to right, top to bottom: (a) 217~$nm$, (b) 250~$nm$, (c) 423~$nm$. In each case, the charge transfer is from the blue regions to the red. These calculations are performed at the TDDFT-PBE0 level.}\label{fig:pshelipeaks}
 \end{figure}
 
-Figure~\ref{fig:pshelipeaks} displays transition densities for $geom_1$ pseudo[10]helicene, for the three peaks which appear to line up best with those of the all-electron spectrum in Figure~\ref{fig:helispectrageom1}. Figures~\ref{fig:pshelipeaks}a, b and c therefore correspond to Figures~\ref{fig:helipeaks}a, b, and d respectively. While the shapes of the lobes do not align as neatly with the all-electron transition densities of Figure~\ref{fig:helipeaks} as transition densities for planar molecules (see Appendix~\ref{app:edens}), we see that the densities all correspond to transitions of similarly $\pi$-$\pi$-like character. A difference however, between the pseudosystem and all-electron transition densities is that while it was noted above that Figure~\ref{fig:helipeaks}c contained some delocalisation of the electron density in the centre of the helix, this is true for all of the pseudosystem transitions in Figure~\ref{fig:pshelipeaks}. It is possible therefore that the $\pi$ electrons are not tightly-enough bound by the pseudopotentials, allowing for a greater electron delocalisation than that permitted by the all-electron systems.
+Figure~\ref{fig:pshelipeaks} displays transition densities for $geom_1$ pseudo[10]helicene, for the three peaks which appear to line up best with those of the all-electron spectrum in Figure~\ref{fig:helispectrageom1}. Figures~\ref{fig:pshelipeaks}a, b and c therefore correspond to Figures~\ref{fig:helipeaks}a, b, and d respectively. While the shapes of the lobes do not align as neatly with the all-electron transition densities of planar molecules reported int he previous work, we see that the densities all correspond to transitions of similarly $\pi$-$\pi$-like character. A difference however, between the pseudosystem and all-electron transition densities is that while it was noted above that Figure~\ref{fig:helipeaks}c contained some delocalisation of the electron density in the centre of the helix, this is true for all of the pseudosystem transitions in Figure~\ref{fig:pshelipeaks}. It is possible therefore that the $\pi$ electrons are not tightly-enough bound by the pseudopotentials, allowing for a greater electron delocalisation than that permitted by the all-electron systems.
 
 We suggest two further possible explanations for the degradation of the ECD spectra: (1) with $n > 6$, the ends of the helicene overlap more and more, resulting in a much more complex electronic structure, and (2) that as the helicene length increases the steric effects of the overlapping $\pi$ rings causes an increasing distortion of individual benzene rings, \emph{i.e.} the helicene `stretches'~\cite{rickhaus_2015}.
 
@@ -932,7 +971,7 @@ These spectra show that we can be confident that our potentials can retain much 
 \caption[Definition of dihedral torsion for benzene]{Dihedral torsion of a benzene ring, viewed from the front (left) and the side (right). In this work, the dihedral torsion of an individual benzene ring is defined as the maximum angle $\theta$ between any two opposing bonds in the ring.}\label{fig:distortiondef}
 \end{figure}
 
-\subsection{Complex Spectra: Twistacene}
+\subsection{Twistacene}
 \label{sec:twistacene}
 
 The phrase `twisted acene', later `twistacene', was introduced in 2004~\cite{lu_2004}, then more throroughly described in 2006~\cite{pascal_2006}. The electronic and optical properties of their parent acenes are altered by this twisting; notably, they are more soluble~\cite{xiao2012synthesis}. The twisting also introduces chirality to the molecule, and can produce bathochromic shifts~\cite{bedi_2018}. 
@@ -943,16 +982,16 @@ Study of these molecules is complicated by the fact that the twisting must be in
 \begin{center}
 \begin{tabular}{c c}
 \includegraphics[width=4cm]{c3-highlights} & \includegraphics[width=4cm]{c4-highlights} \\
+Ant-c3: 38$^{\circ}$ & Ant-c4: 32$^{\circ}$ \\
 \includegraphics[width=4cm]{c5-highlights} &
 \includegraphics[width=4cm]{c6-highlights} \\
+Ant-c5: 30$^{\circ}$ & Ant-c6: 23$^{\circ}$ \\
 \end{tabular} 
 \end{center}
 \caption[Twistacene structure diagrams.]{Structures of Ant-c$n$, where $n=3-6$. From left to right and top to bottom: Ant-c3 (torsion angle 38$^{\circ}$), Ant-c4 (torsion angle 32$^{\circ}$), Ant-c5 (torsion angle 30$^{\circ}$), Ant-c6 (torsion angle 23$^{\circ}$). In each case, the anthracene itself is highlghted in yellow, while the carbon bridge that determines the torsion is highlighted in blue.}\label{fig:tetheredanthracene}
 \end{figure}
 
 This molecule is of specific interest to us for similar reasons to the helicene described in Section~\ref{sec:helicene}, \emph{i.e.} that the distorting of $\pi$ rings starts to break the separation of $\sigma$ and $\pi$ orbitals, which will in turn make our $\alpha$ potentials less and less physically descriptive of the system, likely leading to a poorer result. With a systematic test of increasingly distorted $\pi$ rings therefore, we can gain some idea of the limits of the pseudopotentials used.
-
-\subsubsection{Results and Discussion}
 
 As our interest was solely in the part of the molecule we wished to model with pseudopotentials, \emph{i.e.} the twisted anthracene itself, we first optimised the molecular geometries (at the DFT-PBE0 level, with def-SV(P) basis sets) before removing the atoms surrounding the central anthracene. This way, we could calculate the UV spectra without the risk of the anthracene peaks being obscured by excitations in parts of the molecule in which we were not interested.
 
@@ -1026,11 +1065,11 @@ Figure~\ref{fig:twistapeaks} displays transition densities for the five most dis
 \caption[Transition densities for pseudotwistacene.]{Transition densities for pseudoant-c3. Excitations from left to right, top to bottom: (a) 153~$nm$, (b) 177~$nm$, (c) 215~$nm$, (d) 225~$nm$. In each case, the charge transfer is from the blue regions to the red. These calculations are performed at the TDDFT-PBE0 level.}\label{fig:pstwistapeaks}
 \end{figure}
 
-Figure~\ref{fig:pstwistapeaks} displays transition densities for the five most distinct peaks in the pseudo-Ant-c3 ECD spectrum. We see immediately that in Figure~\ref{fig:pstwistapeaks}a the electron density is distorted in a mostly un-$\pi$-like manner, and so will not be physically representative of any transition present in the all-electron system. It is thought that Figures~\ref{fig:pstwistapeaks}b, c, and d might correspond to Figures~\ref{fig:twistapeaks}b, c, and d respectively. They are broadly $\pi$-like, although the shape of the electron densities do not correspond neatly to the respective all-electon densities in the way that the densities of transitions in the planar molecules do (see Appendix~\ref{app:edens}). One also notes a significant delocalisation across the central $\pi$ ring in all molecules, also observed in the [10]helicene densities of Section~\ref{sec:helicene}. The most distorted benzene rings in both [n]helicene and Ant-c$n$ are to be found in the centre of the molecules, and so we propose that the delocalisation of electron density toward the centre of the molecules, more strongly observed in the pseudomolecules than the all-electron molecules, is what is causing the distortion of the spectra, and that this extra delocalisation is caused by the extra distortion in the central rings, which makes the pseudopotentials a less accurate description of them.
+Figure~\ref{fig:pstwistapeaks} displays transition densities for the five most distinct peaks in the pseudo-Ant-c3 ECD spectrum. We see immediately that in Figure~\ref{fig:pstwistapeaks}a the electron density is distorted in a mostly un-$\pi$-like manner, and so will not be physically representative of any transition present in the all-electron system. It is thought that Figures~\ref{fig:pstwistapeaks}b, c, and d might correspond to Figures~\ref{fig:twistapeaks}b, c, and d respectively. They are broadly $\pi$-like, although the shape of the electron densities do not correspond neatly to the respective all-electon densities in the way that the densities of transitions in the planar molecules do (see Reference~\cite{punter2019atomic}). One also notes a significant delocalisation across the central $\pi$ ring in all molecules, also observed in the [10]helicene densities of Section~\ref{sec:helicene}. The most distorted benzene rings in both [n]helicene and Ant-c$n$ are to be found in the centre of the molecules, and so we propose that the delocalisation of electron density toward the centre of the molecules, more strongly observed in the pseudomolecules than the all-electron molecules, is what is causing the distortion of the spectra, and that this extra delocalisation is caused by the extra distortion in the central rings, which makes the pseudopotentials a less accurate description of them.
 
 In conclusion then, we can say that the pseudosystems were relatively successful at recreating the UV spectra of the distorted anthracene $\pi$ systems, up to and including a distortion of around 14.0$^{\circ}$ per benzene unit (Ant-c3), with the $geom_1$ potentials proving the most successful. However, even at the comparatively low rate of twisting of around 6.2$^{\circ}$ per benzene unit (Ant-c6), the pseudopotentials do not appear to be able to reproduce the ECD spectra of twistacene. This is in contrast to the helicene examined previously, where the pseudopotential ECD spectra were of good quality, despite in many cases a greater rate of planar distortion. We do not have a full explanation for this, but it seems to be in part a result of the nature of the particular excitations that dominate the spectra, and how much of a $\pi$ orbital character they have, as well as local planar distortion in regions of the molecule to and from which the charge transfer takes place.
 
-\subsection{Complex Spectra: Dodecaphenyltetracene}
+\subsection{Dodecaphenyltetracene}
 \label{sec:dodecaphenyltetracene}
 
 In the process of searching through various acenes for suitable test molecules for the pseudopotentials (see Section~\ref{sec:twistacene}), we came across a recent synthesis of dodecaphenyltetracene~\cite{xiao_2019}. The complexity of this molecule, along with the fact the team had reported a UV spectrum to which theoretical spectra could be compared, made this an attractive challenge. The molecular structure is shown in Figure~\ref{fig:dodecaphenyltetracene}.
@@ -1057,11 +1096,11 @@ At first glance the comparison of both pseudopotential spectra with the all-elec
 
 The next comparison to be made is that of these theoretical results with the experimental ones in the original synthesis. The experimental spectrum extends from around 650~$nm$ to 250~$nm$ and has a spread of shallow excitations across the 600-450~$nm$ range, a clear and strong peak at 360~$nm$, and at least one further peak in the 250~$nm$ region. The stronger peaks (below 450~$nm$) are reproduced in the theoretical spectra, both in all-electron and pseudosystem calculations. The range of peaks between 600 and 400~$nm$ is not reproduced in any of the theoretical spectra. Comparison of theoretical and experimental spectra is complicated by the fact in the experimental results the molecules are in a CH$_2$Cl$_2$ solution.
 
-Finally, we note that the HOMO energies of the all-electron system, the $geom_1$ and $set4$ systems are -4.941~$eV$, -5.476~$eV$ and -5.522~$eV$ respectively, making for percentage errors that are not dissimilar to those of the higher polyenes modelled previously (see Table~\ref{tab:set4_transpolyene_errors}).
+Finally, we note that the HOMO energies of the all-electron system, the $geom_1$ and $set4$ systems are -4.941~$eV$, -5.476~$eV$ and -5.522~$eV$ respectively, making for percentage errors that are not dissimilar to those of the higher polyenes modelled previously~\cite{punter2019atomic}.
 
 In conclusion, these results for dodecaphenyltetracene show that this pseudopotential technique is effective at recreating the UV spectra of overlapping and interacting $\pi$ systems.
 
-\subsection{Complex Spectra: Hemi-Cryptophane}
+\subsection{Hemi-Cryptophane}
 
 The interest in cryptophanes and hemicryptophanes lies in their propensity to form Van der Waals complexes as hosts. Some of these complexes have interesting catalytic properties~\cite{ikbal_2019}. The fact that their cavities and catalytic sites are lipophilic has led to an increasing interest in their use as biomimetics of enzymatic systems ~\cite{perraud_2013, gosse_2016}. 
 
@@ -1078,7 +1117,7 @@ In order to try to make the investigation as systematic as possible, we decided 
 \end{center}
 \end{figure}
 
-In light of the results from Section~\ref{sec:simple_systems}, where we saw that the results were markedly less accurate when pseudogfragments were permitted to bond with heteroatoms, it was decide to institute a `no-heterobonding' rule for certain parts of certain pseudocomplexes, in order to see what the effects might be on the resulting spectra. An example of the `no-heterobonding' rule for the `upper $\pi$' section of the cage is shown in Figure~\ref{fig:cu2upperpi}. Figure~\ref{fig:cu2upperpi}a shows the regular-all-electron upper $\pi$ section of the cage. Figure~\ref{fig:cu2upperpi}b shows a version in which all carbon atoms have been replaced by pseudoatoms. Finally, Figure~\ref{fig:cu2upperpi}c shows the upper $\pi$ section following the no-heterobonding rule, in which there must be at least one all-electron carbon atom in between pseudogfragments and heteroatoms.
+In light of the results from Section~\ref{sec:simplesystems}, where we saw that the results were markedly less accurate when pseudogfragments were permitted to bond with heteroatoms, it was decide to institute a `no-heterobonding' rule for certain parts of certain pseudocomplexes, in order to see what the effects might be on the resulting spectra. An example of the `no-heterobonding' rule for the `upper $\pi$' section of the cage is shown in Figure~\ref{fig:cu2upperpi}. Figure~\ref{fig:cu2upperpi}a shows the regular-all-electron upper $\pi$ section of the cage. Figure~\ref{fig:cu2upperpi}b shows a version in which all carbon atoms have been replaced by pseudoatoms. Finally, Figure~\ref{fig:cu2upperpi}c shows the upper $\pi$ section following the no-heterobonding rule, in which there must be at least one all-electron carbon atom in between pseudogfragments and heteroatoms.
 
 \begin{figure}
 \begin{center}
@@ -1170,7 +1209,7 @@ In light of the results from Section~\ref{sec:simple_systems}, where we saw that
 
 \begin{table}
 \begin{center}
-\caption[Breakdown of pseudoCu(II)hemicryptophane structures.]{Structures of pseudohemicryptophane  complexes. Each column represents a part of the molecule (see Figure~\ref{fig:cu2labellingscheme}) that has been replaced with potentials. The `heterobonding' column shows whether or not heterobonding has been permitted, \emph{i.e.} whether pseudofragments have been placed next to non-carbon atoms in the complex. For those systems with the `N ($\pi$)' designation, heterobonding is forbidden for carbons which are members of $\pi$ rings, but has been permitted elsewhere. The '\textasciitilde' symbol in the final column represents a molecule whose spectrum may contain neither, either or both peaks but which is distorted enough that we do not feel confident in assigning them.}
+\caption[Breakdown of pseudoCu(II)hemicryptophane structures.]{Structures of pseudohemicryptophane  complexes. Each column represents a part of the molecule (see Figure~\ref{fig:cu2labellingscheme}) that has been replaced with potentials. The `heterobonding' column shows whether or not heterobonding has been permitted, \emph{i.e.} whether pseudofragments have been placed next to non-carbon atoms in the complex. For those systems with the `N ($\pi$)' designation, heterobonding is forbidden for carbons which are members of $\pi$ rings, but has been permitted elsewhere. The `$\sim$' symbol in the final column represents a molecule whose spectrum may contain neither, either or both peaks but which is distorted enough that we do not feel confident in assigning them.}
 \label{tab:cu2comppots}
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
 \hline
@@ -1180,11 +1219,11 @@ ID & \multicolumn{1}{m{1cm}|}{\centering upper $\pi$} & \multicolumn{1}{m{1.5cm}
 3 & Y & Y & N & N & N & N & 1, 2 \\
 4 & Y & N & Y & N & N & Y & 2 \\
 5 & Y & N & Y & N & N & N ($\pi$) & 1, 2 \\
-6 & N & N & N & N & Y &  Y & \textasciitilde \\
+6 & N & N & N & N & Y &  Y & $\sim$ \\
 3+5 & Y & Y & Y & N & N & N ($\pi$) & 1, 2 \\
 7 & Y & N & Y & Y & N & N ($\pi$) & 1, 2 \\
 8 & Y & Y & Y & Y & N & N ($\pi$) & 1, 2 \\
-9 & Y & Y & Y & Y & Y & N ($\pi$) & \textasciitilde \\
+9 & Y & Y & Y & Y & Y & N ($\pi$) & $\sim$ \\
 \hline
 \end{tabular}
 \end{center}
@@ -1227,7 +1266,7 @@ Figure~\ref{fig:alletrdens} displays the all-electron transition densities for p
 
 We set out to replace as much of the hemicryptophane cage as possible with pseudopotentials, with the stipulation that the features of the UV and ECD spectra should still be identifiable. Many of the pseudocomplexes tested meet this criterion. The one which meets this criterion while removing the largest number of explicit electrons however, is pseudocomplex 8. From Table~\ref{tab:cu2comppots}, we see that this pseudocomplex applies the pseudopotentials from the upper bridges all the way down to the mid-bridges, while making sure to respect the no-heterobonding rule for the upper $\pi$ systems. This makes for an overall reduction in the number of explicit electrons in the complex of 132, from 545 to 413.
 
-In conclusion then, this Cu(II)hemicryptophane complex is reproducible with simple carbon pseudopotentials, as we were able to recreate the key features of the complex's spectrum. This is particularly impressive given the heavy delocalisation of electron density over the whole molecule. However, it should be noted that it was necessary to derive a new rule in order to be sure of retaining the necessary electronic complexity, which is that bonds between pseudocarbons and all-electron atoms should be restricted to carbon-carbon bonds only, and that bonding pseudocarbons to explicit heteroatoms should be avoided. Given the results seen in Section~\ref{sec:simple_systems}, and given that all pseudocarbons in this work are optimised on carbon-carbon bonds, this seems reasonable.
+In conclusion then, this Cu(II)hemicryptophane complex is reproducible with simple carbon pseudopotentials, as we were able to recreate the key features of the complex's spectrum. This is particularly impressive given the heavy delocalisation of electron density over the whole molecule. However, it should be noted that it was necessary to derive a new rule in order to be sure of retaining the necessary electronic complexity, which is that bonds between pseudocarbons and all-electron atoms should be restricted to carbon-carbon bonds only, and that bonding pseudocarbons to explicit heteroatoms should be avoided. Given the results seen in Section~\ref{sec:simplesystems}, and given that all pseudocarbons in this work are optimised on carbon-carbon bonds, this seems reasonable.
 
 %\subsection{Geometry Optimisation}
 %
@@ -1246,8 +1285,9 @@ In conclusion then, this Cu(II)hemicryptophane complex is reproducible with simp
 
 
 \section{Conclusion}
+\label{sec:conc}
 
-A glorious conclusion.
+A glorious conclusion. Mention possible improvements to method
 
 \section{Acknowledgments}
 The authors acknowledge the french Ministère de l'éducation
